@@ -14,7 +14,7 @@ async function run() {
       `${jiraUsername}:${jiraPassword}`
     ).toString("base64")}`;
 
-    const client = http.HttpClient();
+    const client = new http.HttpClient();
     const response = await client.getJSON(
       `https://${jiraHost}/rest/api/latest/issue/${taskId}?fields=status`,
       additionalHeaders
