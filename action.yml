@@ -1,0 +1,22 @@
+name: 'Jira Status Category Check'
+description: 'Checks if a JIRA Status '
+inputs:
+  task-id:
+    description: 'The JIRA task id. e.g. ADB-123,'
+    required: true
+  category-id:
+    description: 'The JIRA category id that the task should be for success.'
+    required: true
+  jira-host:
+    description: 'The JIRA host.'
+    required: true
+    default: 'jira.atlassian.com'
+  jira-username:
+    description: 'The JIRA username.'
+    required: true
+  jira-password:
+    description: 'The JIRA password.'
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'
