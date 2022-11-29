@@ -1,9 +1,28 @@
 const core = require("@actions/core");
 const http = require("@actions/http-client");
+const github = require("@actions/github");
 
 async function run() {
   try {
-    const taskId = core.getInput("task-id");
+    let taskId = core.getInput("task-id");
+
+    if (!taskId) {
+      const { eventName } = github.context;
+      if (eventName !== "pull_request") {
+        core.setFailed(
+          `No task-id provided, trying to get it from the PR title but this is not PR.`
+        );
+        return;
+      }
+
+      const prTitle = github.context.payload.pull_request.title;
+      const regex = /^([A-Za-z]+\-[0-9]+)?/m;
+      let result;
+      if ((result = regex.exec(prTitle)) !== null && result.length == 2) {
+        taskId = result[1];
+      }
+    }
+
     const categoryId = core.getInput("category-id");
     const jiraHost = core.getInput("jira-host");
     const jiraUsername = core.getInput("jira-username");
