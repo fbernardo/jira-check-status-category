@@ -16,11 +16,18 @@ async function run() {
       }
 
       const prTitle = github.context.payload.pull_request.title;
-      const regex = /^([A-Za-z]+\-[0-9]+)?/m;
+      const regex = /^(?<id>[A-Za-z]+\-[0-9]+)?/m;
       let result;
-      if ((result = regex.exec(prTitle)) !== null && result.length == 2) {
-        taskId = result[1];
+      if ((result = regex.exec(prTitle)) !== null) {
+        taskId = result.groups.id;
       }
+    }
+
+    if (!taskId) {
+      core.setFailed(
+        `No task-id provided and no task-id found on the PR title.`
+      );
+      return;
     }
 
     const categoryId = core.getInput("category-id");
